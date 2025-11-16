@@ -1,3 +1,8 @@
+#Get-AppInventoryReport.ps1 - V1.0
+#For Admin Side, for generating excel sheet and downloading results
+#Written by Harry Shelton
+#Nov 2025
+
 function Get-AppCount {
     <#
     .EXAMPLE
