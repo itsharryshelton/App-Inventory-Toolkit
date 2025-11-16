@@ -1,5 +1,45 @@
 # App Inventory Toolkit
-Work with your RMM or GPO to grab all applications, upload to R2 Bucket and then summarise all the information into one easy excel sheet.
+
+This toolkit provides a lightweight, agentless way to gather application inventories from client endpoints and store them in a central Cloudflare R2 bucket. It consists of two PowerShell scripts:
+
+1.  **`Start-AppInventoryUpload.ps1` (Client-side):** A zero-dependency script for RMM deployment that uploads an app list from a single endpoint.
+2.  **`Get-AppInventoryReport.ps1` (Admin-side):** An engineer's script to download all data for a customer and generate a multi-sheet Excel report.
+
+---
+
+## How it Works
+
+The process is designed to be simple and scalable for an MSP.
+
+1.  **Deploy:** An engineer configures and deploys `Start-AppInventoryUpload.ps1` via an RMM (like Datto).
+2.  **Collect:** The script runs on a schedule on all endpoints, sending a small `.json` file with its app list to your R2 bucket.
+3.  **Analyze:** An engineer runs `Get-AppInventoryReport.ps1`, which securely syncs all the JSON files for a customer.
+4.  **Report:** The script processes the data and generates a clean, two-sheet Excel report showing a full "Raw Data" list and a "Summary" of the most common apps.
+
+---
+
+## Setup & Configuration
+
+### 1. Cloudflare R2 Setup (One-Time)
+
+Before you begin, you need a Cloudflare R2 bucket and an API token.
+
+1.  Create a new R2 bucket (e.g., `msp-app-inventory`).
+2.  Go to **R2** > **Manage R2 API Tokens**.
+3.  Create an API token with **"Object Read & Write"** permissions.
+4.  **Crucially:** Lock the token down to your new bucket using the **"Specify bucket(s)"** option.
+5.  Copy the `Access Key ID`, `Secret Access Key`, and your R2 S3 Endpoint URL.
+
+### 2. Admin Machine Setup (One-Time)
+
+Any engineer who wants to run the report script needs to do this once:
+
+1.  **Install rclone:** Download `rclone.exe` and place it in the same folder as the `Get-AppInventoryReport.ps1` script.
+2.  **Install Excel Module:** Open PowerShell and run:
+    ```powershell
+    Install-Module ImportExcel -Scope CurrentUser
+    ```
+
 
 ## `Start-AppInventoryUpload.ps1`
 
